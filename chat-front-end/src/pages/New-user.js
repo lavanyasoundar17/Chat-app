@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-function NewUser(){
+ function NewUser(){
     const navigate = useNavigate();
     return (
     <section>
@@ -8,7 +8,14 @@ function NewUser(){
             <button className="btn-primary" onClick={() => navigate(-1)}>
             Go Back
             </button>
-    </section>
+            <button className="btn-primary" onClick={() => navigate('/new-user-form')}>
+            New User login
+            </button>
+    </section>  
 )
 }
+
+
+      
+      
 export default NewUser;
