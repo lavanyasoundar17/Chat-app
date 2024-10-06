@@ -1,0 +1,23 @@
+.newUserFormContainer{
+    min-width: 230px;
+    background-color: #424442;
+    width: 35%;
+    margin: 50px auto;
+    padding: 20px;
+    border-radius: 20px;
+}
+.newUserForm {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+.error {
+    color: red;
+    margin-top: 10px;
+  }
+.btnSubmit{
+    margin-top:15px;
+    width: 40%;
+    align-self: center; 
+}

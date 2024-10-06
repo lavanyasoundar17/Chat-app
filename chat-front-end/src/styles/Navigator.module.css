@@ -1,0 +1,13 @@
+.newUserHeader{
+    display: flex;
+    align-items: center;
+  }
+  .arrowIcon {
+    color: #96dd96;
+    width: 20px;
+  }
+  .title {
+    width: calc(100% - 20px);
+    display: flex;
+    justify-content: center;
+  }
