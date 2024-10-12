@@ -9,6 +9,7 @@ function NewUser() {
     lastName: "",
     email: "",
     password: "",
+    reEnterPassword: "", // Changed from rePassword to reEnterPassword
   });
 
   const [inputError, setInputError] = useState({
@@ -16,15 +17,16 @@ function NewUser() {
     lastName: "",
     email: "",
     password: "",
+    reEnterPassword: "", // Error state for re-enter password
   });
 
-  const fieldOrder = ["firstName", "lastName", "email", "password"]; // Field order for validation
+  const fieldOrder = ["firstName", "lastName", "email", "password", "reEnterPassword"]; // Field order for validation
 
   // Handle validation logic for each field
   const validateField = (name, value) => {
     let error = "";
     if (!value) {
-      error = `${name} is required!`;
+      error = `${name.charAt(0).toUpperCase() + name.slice(1)} is required!`;
     }
 
     if (name === "email" && value) {
@@ -36,6 +38,11 @@ function NewUser() {
 
     if (name === "password" && value.length < 6) {
       error = "Password must be at least 6 characters long!";
+    }
+
+    // Validate re-entered password
+    if (name === "reEnterPassword" && value !== formData.password) {
+      error = "Passwords do not match!";
     }
 
     return error;
@@ -76,7 +83,7 @@ function NewUser() {
 
     // If there is a previous field and it's not filled, block access to the current field
     if (previousField && !formData[previousField]) {
-      const previousFieldError = `${previousField} is required!`;
+      const previousFieldError = `${previousField.charAt(0).toUpperCase() + previousField.slice(1)} is required!`;
       setInputError((prevErrors) => ({
         ...prevErrors,
         [previousField]: previousFieldError,
@@ -119,6 +126,7 @@ function NewUser() {
       lastName: "",
       email: "",
       password: "",
+      reEnterPassword: "", // Reset the re-entered password
     });
     setInputError({});
   };
@@ -179,6 +187,19 @@ function NewUser() {
             onFocus={handleFocus}
           />
           {inputError.password && <div className="error">{inputError.password}</div>}
+
+          {/* Re-enter Password Field */}
+          <label htmlFor="reEnterPassword">Re-enter Password:</label>
+          <input
+            type="password"
+            id="reEnterPassword"
+            name="reEnterPassword"
+            value={formData.reEnterPassword}
+            onChange={handleChange}
+            onBlur={handleBlur} 
+            onFocus={handleFocus}
+          />
+          {inputError.reEnterPassword && <div className="error">{inputError.reEnterPassword}</div>}
 
           {/* Submit Button */}
           <button className={`${styles.btnSubmit} btn-primary`} type="submit" ref={inputRef}>
