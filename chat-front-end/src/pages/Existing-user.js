@@ -64,7 +64,7 @@ function ExistingUser(){
         });
         return errors;
       };
-      const handleSubmit = (e) => {
+      const handleSubmit = async(e) => {
         e.preventDefault();
         const errors = validateAllFields();
     
@@ -73,6 +73,28 @@ function ExistingUser(){
           setInputError(errors);
           return;
         }
+        try {
+            const response = await fetch('http://localhost:5000/api/existinguser', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(formData),
+            });
+        
+            const data = await response.json();
+        
+            if (!response.ok) {
+              // Handle error response
+              alert(data.error);
+            } else {
+              // Handle success response
+              alert(data.message);
+            }
+          } catch (error) {
+            console.error('Error submitting form:', error);
+          }
+        
         setFormData({
             email: "",
             password: ""

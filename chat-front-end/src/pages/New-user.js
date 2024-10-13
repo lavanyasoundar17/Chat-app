@@ -124,7 +124,7 @@ function NewUser() {
     return errors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     const errors = validateAllFields();
 
@@ -134,10 +134,27 @@ function NewUser() {
       return;
     }
 
-    // If validation passes, show success alert
-    alert(
-      `First Name: ${formData.firstName}, Last Name: ${formData.lastName}, Email: ${formData.email}, Password: ${formData.password}`
-    );
+    try {
+      const response = await fetch('http://localhost:5000/api/newuser', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+  
+      const data = await response.json();
+  
+      if (!response.ok) {
+        // Handle error response
+        alert(data.error);
+      } else {
+        // Handle success response
+        alert(data.message);
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    }
 
     // Reset form data and errors
     setFormData({
