@@ -2,6 +2,8 @@ import {useState} from "react";
 import PageNameAndNavigator from "../components/Navigator";
 import styles from "../styles/new-user.module.css";
 import Submit from "../components/Submit";
+import { API_URL } from '../config';
+
 
 function NewUser() {
   const [formData, setFormData] = useState({
@@ -135,7 +137,7 @@ function NewUser() {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/api/newuser', {
+      const response = await fetch(`${API_URL}/newuser`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -144,14 +146,7 @@ function NewUser() {
       });
   
       const data = await response.json();
-  
-      if (!response.ok) {
-        // Handle error response
-        alert(data.error);
-      } else {
-        // Handle success response
-        alert(data.message);
-      }
+      alert(!response.ok ? data.error : data.message);
     } catch (error) {
       console.error('Error submitting form:', error);
     }

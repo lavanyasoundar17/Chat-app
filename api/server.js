@@ -1,6 +1,9 @@
 const express = require('express');
+const cors = require('cors'); //using cors because frontend and backend are running in different portals
 const app = express();
 
+// Middleware
+app.use(cors());
 app.use(express.json());
 
 app.post("/api/newuser",(req,res)=>{

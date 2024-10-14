@@ -2,6 +2,7 @@ import { useState} from "react";
 import PageNameAndNavigator from "../components/Navigator";
 import Submit from "../components/Submit";
 import styles from "../styles/new-user.module.css";
+import { API_URL } from '../config';
 
 
 function ExistingUser(){
@@ -74,7 +75,7 @@ function ExistingUser(){
           return;
         }
         try {
-            const response = await fetch('http://localhost:5000/api/existinguser', {
+            const response = await fetch(`${API_URL}/existinguser`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -83,14 +84,7 @@ function ExistingUser(){
             });
         
             const data = await response.json();
-        
-            if (!response.ok) {
-              // Handle error response
-              alert(data.error);
-            } else {
-              // Handle success response
-              alert(data.message);
-            }
+            alert(!response.ok ? data.error : data.message);
           } catch (error) {
             console.error('Error submitting form:', error);
           }
