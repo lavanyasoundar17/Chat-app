@@ -1,109 +1,109 @@
-import { useState} from "react";
+import { useState } from "react";
 import PageNameAndNavigator from "../components/Navigator";
 import Submit from "../components/Submit";
 import styles from "../styles/new-user.module.css";
-import { API_URL } from '../config';
+import { API_URL } from "../config";
 
-
-function ExistingUser(){
-    const [formData, setFormData] = useState({
-        email: "",
-        password: "",
-      });
-      const [inputError, setInputError] = useState({
-        email: "",
-        password: "",
-      });
-      const validateField = (name, value) => {
-        let error = "";
-        if (name === "email") {
-            const emailRegex = /^((?!\.)[\w-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/gim;;
-            if(!value){
-            error = "Error : Email is required";
-            }
-            else if (!emailRegex.test(value)) {
-              error = "Error : Invalid email format!";
-            }
-          }
-          if(name==="password"){
-            if(!value){
-              error = "Error : Password is required";
-            }
-          }
-          return error;
+function ExistingUser() {
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+  const [inputError, setInputError] = useState({
+    email: "",
+    password: "",
+  });
+  const validateField = (name, value) => {
+    let error = "";
+    if (name === "email") {
+      const emailRegex = /^((?!\.)[\w-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/gim;
+      if (!value) {
+        error = "Error : Email is required";
+      } else if (!emailRegex.test(value)) {
+        error = "Error : Invalid email format!";
       }
-      const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prevFormData) => ({
-          ...prevFormData,
-          [name]: value,
-        }));
-    
-        // Validate field when typing
-        const error = validateField(name, value);
-        setInputError((prevErrors) => ({
-          ...prevErrors,
-          [name]: error,
-        }));
-      };
+    }
+    if (name === "password") {
+      if (!value) {
+        error = "Error : Password is required";
+      }
+    }
+    return error;
+  };
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
 
-      const handleBlur = (e) => {
-        const { name, value } = e.target;
-        const error = validateField(name, value);
-        setInputError((prevErrors) => ({
-          ...prevErrors,
-          [name]: error,
-        }));
-      };
-      const validateAllFields = () => {
-        const errors = {};
-        Object.keys(formData).forEach((field) => {
-          const error = validateField(field, formData[field]);
-          if (error) {
-            errors[field] = error;
-          }
-        });
-        return errors;
-      };
-      const handleSubmit = async(e) => {
-        e.preventDefault();
-        const errors = validateAllFields();
-    
-        // If there are errors, display them and prevent form submission
-        if (Object.keys(errors).length > 0) {
-          setInputError(errors);
-          return;
-        }
-        try {
-            const response = await fetch(`${API_URL}/existinguser`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(formData),
-            });
-        
-            const data = await response.json();
-            alert(!response.ok ? data.error : data.message);
-          } catch (error) {
-            console.error('Error submitting form:', error);
-          }
-        
-        setFormData({
-            email: "",
-            password: ""
-          });
-          setInputError({});
-        };
-      
-    
-    return (
-        <section>
+    // Validate field when typing
+    const error = validateField(name, value);
+    setInputError((prevErrors) => ({
+      ...prevErrors,
+      [name]: error,
+    }));
+  };
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    const error = validateField(name, value);
+    setInputError((prevErrors) => ({
+      ...prevErrors,
+      [name]: error,
+    }));
+  };
+  const validateAllFields = () => {
+    const errors = {};
+    Object.keys(formData).forEach((field) => {
+      const error = validateField(field, formData[field]);
+      if (error) {
+        errors[field] = error;
+      }
+    });
+    return errors;
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const errors = validateAllFields();
+
+    // If there are errors, display them and prevent form submission
+    if (Object.keys(errors).length > 0) {
+      setInputError(errors);
+      return;
+    }
+
+    const credentials = { ...formData, password: btoa(formData.password) };
+
+    try {
+      const response = await fetch(`${API_URL}/user/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(credentials),
+      });
+
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
+
+    setFormData({
+      email: "",
+      password: "",
+    });
+    setInputError({});
+  };
+
+  return (
+    <section>
       <PageNameAndNavigator userType="Existing user" />
       <section className={styles.newUserFormContainer}>
-      <form className={styles.newUserForm} onSubmit={handleSubmit}>
-        {/* Email Field */}
-        <label htmlFor="email">Email:</label>
+        <form className={styles.newUserForm} onSubmit={handleSubmit}>
+          {/* Email Field */}
+          <label htmlFor="email">Email:</label>
           <input
             type="text"
             id="email"
@@ -112,7 +112,9 @@ function ExistingUser(){
             onChange={handleChange}
             onBlur={handleBlur}
           />
-          {inputError.email && <div className={styles.error}>{inputError.email}</div>}
+          {inputError.email && (
+            <div className={styles.error}>{inputError.email}</div>
+          )}
 
           {/* Password Field */}
           <label htmlFor="password">Password:</label>
@@ -124,14 +126,14 @@ function ExistingUser(){
             onChange={handleChange}
             onBlur={handleBlur}
           />
-          {inputError.password && <div className={styles.error}>{inputError.password}</div>}
+          {inputError.password && (
+            <div className={styles.error}>{inputError.password}</div>
+          )}
           {/* Submit Button */}
-          <Submit/>
+          <Submit />
         </form>
-
       </section>
-
-      </section>
-    );
+    </section>
+  );
 }
 export default ExistingUser;

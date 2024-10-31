@@ -1,9 +1,8 @@
-import {useState} from "react";
+import { useState } from "react";
 import PageNameAndNavigator from "../components/Navigator";
 import styles from "../styles/new-user.module.css";
 import Submit from "../components/Submit";
-import { API_URL } from '../config';
-
+import { API_URL } from "../config";
 
 function NewUser() {
   const [formData, setFormData] = useState({
@@ -43,30 +42,27 @@ function NewUser() {
     }
     //validate email
     if (name === "email") {
-      const emailRegex = /^((?!\.)[\w-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/gim;;
-      if(!value){
-      error = "Error : Email is required";
-      }
-      else if (!emailRegex.test(value)) {
+      const emailRegex = /^((?!\.)[\w-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/gim;
+      if (!value) {
+        error = "Error : Email is required";
+      } else if (!emailRegex.test(value)) {
         error = "Error : Invalid email format!";
       }
     }
-     //validate pw
-    if(name==="password"){
-      if(!value){
+    //validate pw
+    if (name === "password") {
+      if (!value) {
         error = "Error : Password is required";
-      }
-      else if(value.length < 6){
+      } else if (value.length < 6) {
         error = "Error : Password must be at least 6 characters long!";
       }
     }
 
     // Validate re-entered password
-    if(name==="reEnterPassword"){
-      if(!value){
+    if (name === "reEnterPassword") {
+      if (!value) {
         error = "Error : Re-Enter password is required";
-      }
-      else if(value !== formData.password){
+      } else if (value !== formData.password) {
         error = "Error : Passwords do not match!";
       }
     }
@@ -78,11 +74,19 @@ function NewUser() {
     if (name === "firstName" || name === "lastName") {
       const key = e.key;
       // Allow only letters and basic navigation keys (Backspace, Tab, etc.)
-      if (!/^[a-zA-Z]+$/.test(key) && key !== "Backspace" && key !== "Tab" && key !== "ArrowLeft" && key !== "ArrowRight") {
+      if (
+        !/^[a-zA-Z]+$/.test(key) &&
+        key !== "Backspace" &&
+        key !== "Tab" &&
+        key !== "ArrowLeft" &&
+        key !== "ArrowRight"
+      ) {
         e.preventDefault(); // Prevent the invalid key from being entered
         setInputError((prevErrors) => ({
           ...prevErrors,
-          [name]: ` ${name === "firstName" ? "First" : "Last"}  name should only contain letters!`,
+          [name]: ` ${
+            name === "firstName" ? "First" : "Last"
+          }  name should only contain letters!`,
         }));
       }
     }
@@ -126,7 +130,7 @@ function NewUser() {
     return errors;
   };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const errors = validateAllFields();
 
@@ -136,19 +140,23 @@ function NewUser() {
       return;
     }
 
+    const newUser = { ...formData, password: btoa(formData.password) };
+
+    delete newUser.reEnterPassword;
+
     try {
-      const response = await fetch(`${API_URL}/newuser`, {
-        method: 'POST',
+      const response = await fetch(`${API_URL}/user`, {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(newUser),
       });
-  
+
       const data = await response.json();
-      alert(!response.ok ? data.error : data.message);
+      console.log(data);
     } catch (error) {
-      console.error('Error submitting form:', error);
+      console.error("Error submitting form:", error);
     }
 
     // Reset form data and errors
@@ -177,9 +185,10 @@ function NewUser() {
             onChange={handleChange}
             onKeyDown={handleKeyDown}
             onBlur={handleBlur}
-            
           />
-          {inputError.firstName && <div className={styles.error}>{inputError.firstName}</div>}
+          {inputError.firstName && (
+            <div className={styles.error}>{inputError.firstName}</div>
+          )}
 
           {/* Last Name Field */}
           <label htmlFor="lastName">Last Name:</label>
@@ -191,9 +200,10 @@ function NewUser() {
             onChange={handleChange}
             onKeyDown={handleKeyDown}
             onBlur={handleBlur}
-            
           />
-          {inputError.lastName && <div className={styles.error}>{inputError.lastName}</div>}
+          {inputError.lastName && (
+            <div className={styles.error}>{inputError.lastName}</div>
+          )}
 
           {/* Email Field */}
           <label htmlFor="email">Email:</label>
@@ -204,9 +214,10 @@ function NewUser() {
             value={formData.email}
             onChange={handleChange}
             onBlur={handleBlur}
-            
           />
-          {inputError.email && <div className={styles.error}>{inputError.email}</div>}
+          {inputError.email && (
+            <div className={styles.error}>{inputError.email}</div>
+          )}
 
           {/* Password Field */}
           <label htmlFor="password">Password:</label>
@@ -217,9 +228,10 @@ function NewUser() {
             value={formData.password}
             onChange={handleChange}
             onBlur={handleBlur}
-            
           />
-          {inputError.password && <div className={styles.error}>{inputError.password}</div>}
+          {inputError.password && (
+            <div className={styles.error}>{inputError.password}</div>
+          )}
 
           {/* Re-enter Password Field */}
           <label htmlFor="reEnterPassword">Re-enter Password:</label>
@@ -229,13 +241,14 @@ function NewUser() {
             name="reEnterPassword"
             value={formData.reEnterPassword}
             onChange={handleChange}
-            onBlur={handleBlur} 
-            
+            onBlur={handleBlur}
           />
-          {inputError.reEnterPassword && <div className={styles.error}>{inputError.reEnterPassword}</div>}
+          {inputError.reEnterPassword && (
+            <div className={styles.error}>{inputError.reEnterPassword}</div>
+          )}
 
           {/* Submit Button */}
-          <Submit/>
+          <Submit />
         </form>
       </section>
     </section>
