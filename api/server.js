@@ -8,11 +8,13 @@ const { getAuth } = require("firebase/auth");
 
 const firebaseApp = initializeApp(firebaseConfig);
 const auth = getAuth(firebaseApp);
+const cookieParser = require("cookie-parser");
 
 // Middleware
 
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 
 app.use("/api/user", userRoutes);
 
